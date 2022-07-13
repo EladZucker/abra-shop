@@ -2,13 +2,12 @@ import styled from "styled-components";
 import CartItem from "./CartItem";
 import { deviceSize } from "../../constants";
 import { useDispatch, useSelector } from "react-redux";
-import { addItemToCart } from "../../redux/storeSlice";
+import { addItemToCart, removeItemFromCart } from "../../redux/storeSlice";
 
 const CartItems = () => {
   const cart = useSelector((state) => state.store.cart);
   const dispatch = useDispatch();
 
-  const removeItemFromCart = () => {};
   return (
     <StyledCartItemsWrapper>
       {cart.map((item) => (
@@ -18,8 +17,14 @@ const CartItems = () => {
           price={item.price}
           image={item.image}
           quantity={item.quantity}
-          onRemoveItem={() => removeItemFromCart(item, true)}
-          onReduce={() => removeItemFromCart(item)}
+          onRemoveItem={() =>
+            dispatch(removeItemFromCart({ itemId: item.id, forceDelete: true }))
+          }
+          onReduce={() =>
+            dispatch(
+              removeItemFromCart({ itemId: item.id, forceDelete: false })
+            )
+          }
           onAdd={() => dispatch(addItemToCart(item.id))}
         />
       ))}
